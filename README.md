@@ -1,4 +1,4 @@
-# Flutter Hero Page Route Transition
+# Flutter Hero Route Transition
 
 This article will help you build a smooth [Hero](https://api.flutter.dev/flutter/widgets/Hero-class.html) transition from a `FloatingActionButton` to another page while gaining full control of the route transition animation.
 
