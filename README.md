@@ -18,4 +18,29 @@ In this case, however, we want to leverage [Hero animations](https://flutter.dev
 
 Furthermore, we want to encapsulate all that logic in a separate [Widget](https://flutter.dev/docs/development/ui/widgets-intro) so that when a new route is pushed onto the navigation stack the code looks as concise as possible.
 
-## Route Transition Basics
+## Hero Page Route Widget
+
+At the top level our code looks like this:
+
+```
+final _heroTag = 'Hero Page';
+
+Navigator.of(context).push(
+  HeroPageRoute(
+    tag: _heroTag,
+    child: HeroPage(),
+  )
+);
+
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    ...
+    floatingActionButton: FloatingActionButton(
+      heroTag: _heroTag,
+      child: const Icon(Icons.add),
+      onPressed: () => _gotoHeroPage(context),
+    ),
+  );
+}
+```
