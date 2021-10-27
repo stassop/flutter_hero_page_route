@@ -35,4 +35,35 @@ Navigator.of(context).push(
 
 Let's have a look at what happens inside `HeroPageRoute`.
 
-`HeroPageRoute` extends `PageRouteBuilder` to give it control over transition timing and animation. The widget returns a `Hero` with a [customized transition tween](https://api.flutter.dev/flutter/widgets/Hero/createRectTween.html) and a child widget that uses the `PageRouteBuilder`'s animation controller to create route transition animations.
+`HeroPageRoute` extends `PageRouteBuilder` to give it control over transition timing and animation. The widget returns a `Hero` with a [customized transition tween](https://api.flutter.dev/flutter/widgets/Hero/createRectTween.html) and a child widget that uses the `PageRouteBuilder`'s animation controller to create route transition animations:
+
+```
+class HeroPageRoute extends PageRouteBuilder {
+  final String tag;
+  final Widget child;
+
+  HeroPageRoute({
+    required this.tag,
+    required this.child,
+  }) : super( // PageRouteBuilder
+    transitionDuration: Duration(milliseconds: 1000),
+    reverseTransitionDuration: Duration(milliseconds: 1000),
+    pageBuilder: (
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+    ) {
+      return Hero(
+        tag: tag,
+        createRectTween: (Rect? begin, Rect? end) {
+          return CurvedRectArcTween(begin: begin, end: end);
+        },
+        child: PageRouteAnimation(
+          child: child,
+          animation: animation,
+        ),
+      );
+    },
+  );
+}
+```
