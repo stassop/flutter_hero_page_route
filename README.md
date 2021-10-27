@@ -6,7 +6,7 @@ This article will help you build a smooth [Hero](https://api.flutter.dev/flutter
 
 ## Getting Started
 
-To run the project open the iPhone simulator and run terminal command `flutter run`.
+To run the project open the iPhone simulator and run `flutter run`.
 
 This article assumes basic knowledge of [Flutter](https://flutter.dev/) and [Dart](https://dart.dev/).
 
