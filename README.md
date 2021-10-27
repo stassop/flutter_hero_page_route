@@ -10,6 +10,8 @@ This article assumes basic knowledge of [Flutter](https://flutter.dev/) and [Dar
 
 To run the project open the iPhone simulator and run terminal command `flutter run`.
 
+You can find the complete project [here](https://github.com/stassop/flutter_hero_page_route).
+
 ## Route Transition Basics
 
 To [switch to a new route](https://flutter.dev/docs/cookbook/navigation/navigation-basics), we'd normally use `Navigator.push()` passing either `MaterialPageRoute`, which uses a platform-specific animation, or `PageRouteBuilder` which allows more [refined control](https://flutter.dev/docs/cookbook/animation/page-route-animation) of how page transition takes place.
@@ -20,7 +22,7 @@ Furthermore, we want to encapsulate all that logic in a separate [Widget](https:
 
 ## Hero Page Route Widget
 
-At the top level our code looks like this:
+At the top level our home page code looks like this:
 
 ```
 final _heroTag = 'Hero Page';
@@ -35,7 +37,6 @@ Navigator.of(context).push(
 @override
 Widget build(BuildContext context) {
   return Scaffold(
-    ...
     floatingActionButton: FloatingActionButton(
       heroTag: _heroTag,
       child: const Icon(Icons.add),
