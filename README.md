@@ -1,8 +1,8 @@
 # Flutter Hero Page Route
 
-This article will help you to build a smooth Hero transition from a FloatingActionButton to another page while gaining full control of the page transition animation.
+This article will help you build a smooth Hero transition from a FloatingActionButton to another page while gaining full control of the page transition animation.
 
-
+![Flutter Hero Page Route](flutter_hero_page_route.gif)
 
 ## Getting Started
 
