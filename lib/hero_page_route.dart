@@ -50,7 +50,7 @@ class PageRouteAnimation extends StatelessWidget {
       animation: animation,
       builder: (BuildContext context, Widget? animatedWidget) {
         return Material(
-          color: Colors.blue, // Must be the same as FloatingActionButton color
+          color: Colors.blue, // must be the same color as FloatingActionButton
           clipBehavior: Clip.antiAlias,
           elevation: elevationAnimation.value,
           borderRadius: borderRadiusAnimation.value,
@@ -71,7 +71,7 @@ class HeroPageRoute extends PageRouteBuilder {
   HeroPageRoute({
     required this.tag,
     required this.child,
-  }) : super( // PageRouteBuilder
+  }) : super(
     transitionDuration: Duration(milliseconds: 1000),
     reverseTransitionDuration: Duration(milliseconds: 1000),
     pageBuilder: (

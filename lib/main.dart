@@ -59,7 +59,7 @@ class HeroPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // Back button will be added automatically
+        // Back button is added automatically
         title: Text('Hero Page'),
       ),
       body: Center(
