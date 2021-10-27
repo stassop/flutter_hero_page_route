@@ -1,4 +1,4 @@
-# flutter_hero_page_route
+# Flutter Hero Page Route
 
 A new Flutter project.
 
