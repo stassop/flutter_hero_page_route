@@ -14,7 +14,7 @@ You can find the complete project [here](https://github.com/stassop/flutter_hero
 
 ## Route Transition Basics
 
-To [switch to a new route](https://flutter.dev/docs/cookbook/navigation/navigation-basics), we'd normally use `Navigator.push()` passing either a `MaterialPageRoute`, which uses a platform-specific animation, or a `PageRouteBuilder`, which allows more [refined control](https://flutter.dev/docs/cookbook/animation/page-route-animation) of how page transition takes place.
+To [navigate to another route](https://flutter.dev/docs/cookbook/navigation/navigation-basics), we'd normally use `Navigator.push()` passing either a `MaterialPageRoute`, which uses a platform-specific animation, or a `PageRouteBuilder`, which allows more [refined control](https://flutter.dev/docs/cookbook/animation/page-route-animation) of how page transition takes place.
 
 In this case, however, we want to leverage [Hero animations](https://flutter.dev/docs/cookbook/navigation/hero-animations) to create a page transition from a `FloatingActionButton` while retaining full control of the animation timing and duration. We also want the button to morph into the new page instead of the page just popping up on screen.
 
