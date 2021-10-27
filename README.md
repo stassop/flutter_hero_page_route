@@ -35,7 +35,7 @@ Navigator.of(context).push(
 
 Let's have a look at what happens inside `HeroPageRoute`.
 
-`HeroPageRoute` extends `PageRouteBuilder` to give it control over transition timing and animation. The widget returns a `Hero` with a [customized transition tween](https://api.flutter.dev/flutter/widgets/Hero/createRectTween.html) and a child widget that uses the `PageRouteBuilder`'s animation controller to create route transition animations:
+`HeroPageRoute` extends `PageRouteBuilder` to give it control over transition duration and animation. The widget returns a `Hero` with a [customized transition tween](https://api.flutter.dev/flutter/widgets/Hero/createRectTween.html) and a child widget that uses the `PageRouteBuilder`'s animation controller to create route transition animations:
 
 ```
 class HeroPageRoute extends PageRouteBuilder {
@@ -65,5 +65,23 @@ class HeroPageRoute extends PageRouteBuilder {
       );
     },
   );
+}
+```
+
+`Hero`'s `createRectTween` param allows you to define a custom transition tween. In this case we don't want to completely replace the default `MaterialRectArcTween`, but only control the transition timing using [easing Curves](https://api.flutter.dev/flutter/animation/Curves-class.html). `CurvedRectArcTween` extends `MaterialRectArcTween` and overrides the parent class [lerp method](https://api.flutter.dev/flutter/animation/Tween/lerp.html):
+
+```
+class CurvedRectArcTween extends MaterialRectArcTween {
+  CurvedRectArcTween({
+    Rect? begin,
+    Rect? end,
+  }) : super(begin: begin, end: end);
+
+  @override
+  Rect lerp(double t) {
+    Cubic easeInOut = Cubic(0.42, 0.0, 0.58, 1.0); // Curves.easeInOut
+    double curvedT = easeInOut.transform(t);
+    return super.lerp(curvedT);
+  }
 }
 ```
