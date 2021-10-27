@@ -6,9 +6,9 @@ This article will help you build a smooth Hero transition from a `FloatingAction
 
 ## Getting Started
 
-This article assumes basic knowledge of [Flutter](https://flutter.dev/) and [Dart](https://dart.dev/).
-
 To run the project open the iPhone simulator and run terminal command `flutter run`.
+
+This article assumes basic knowledge of [Flutter](https://flutter.dev/) and [Dart](https://dart.dev/).
 
 You can find the complete project [here](https://github.com/stassop/flutter_hero_page_route).
 
