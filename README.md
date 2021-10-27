@@ -22,26 +22,15 @@ Furthermore, we want to encapsulate all that logic in a separate [Widget](https:
 
 ## Hero Page Route Widget
 
-At the top level our home page code looks like this:
+At the top level our code looks like this:
 
 ```
-final _heroTag = 'Hero Page';
-
 Navigator.of(context).push(
   HeroPageRoute(
-    tag: _heroTag,
+    tag: 'Hero Page',
     child: HeroPage(),
   )
 );
-
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    floatingActionButton: FloatingActionButton(
-      heroTag: _heroTag,
-      child: const Icon(Icons.add),
-      onPressed: () => _gotoHeroPage(context),
-    ),
-  );
-}
 ```
+
+Let's have a look at what happens inside `HeroPageRoute`.
