@@ -122,7 +122,7 @@ class PageRouteAnimation extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: animation,
-      builder: (BuildContext context, Widget? animatedWidget) {
+      builder: (BuildContext context, Widget? child) {
         return Material(
           color: Colors.blue, // must be the same color as FloatingActionButton
           clipBehavior: Clip.antiAlias,
@@ -134,6 +134,7 @@ class PageRouteAnimation extends StatelessWidget {
           )
         );
       },
+      child: child,
     );
   }
 }
