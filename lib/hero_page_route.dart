@@ -15,52 +15,35 @@ class CurvedRectArcTween extends MaterialRectArcTween {
   }
 }
 
-class PageRouteAnimation extends StatelessWidget {
-  final Widget child;
-  final Animation<double> animation;
-  final Animation<double> opacityAnimation;
-  final Animation<double> elevationAnimation;
-  final Animation<BorderRadius?> borderRadiusAnimation;
-
-  PageRouteAnimation({
+class PageRouteTransition extends AnimatedWidget {
+  const PageRouteTransition({
     Key? key,
     required this.child,
     required this.animation,
-  }) :
-    opacityAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(animation),
+  }) : super(key: key, listenable: animation);
 
-    elevationAnimation = Tween<double>(
-      begin: 6.0, // FloatingActionButton default resting elevation
-      end: 0.0,
-    ).animate(animation),
-
-    borderRadiusAnimation = BorderRadiusTween(
-      begin: BorderRadius.circular(100.0),
-      end: BorderRadius.zero,
-    ).animate(animation),
-
-    super(key: key);
+  final Widget child;
+  final Animation<double> animation;
+  
+  static final opacityTween = Tween<double>(begin: 0.0, end: 1.0);
+  static final elevationTween = Tween<double>(begin: 6.0, end: 0.0);
+  static final borderRadiusTween = BorderRadiusTween(
+    begin: BorderRadius.circular(100.0),
+    end: BorderRadius.zero,
+  );
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: animation,
-      builder: (BuildContext context, Widget? child) {
-        return Material(
-          color: Colors.blue, // must be the same color as FloatingActionButton
-          clipBehavior: Clip.antiAlias,
-          elevation: elevationAnimation.value,
-          borderRadius: borderRadiusAnimation.value,
-          child: Opacity(
-            opacity: opacityAnimation.value,
-            child: child,
-          ),
-        );
-      },
-      child: child,
+    final animation = listenable as Animation<double>;
+    return Material(
+      color: Colors.blue, // must be the same color as FloatingActionButton
+      clipBehavior: Clip.antiAlias,
+      elevation: elevationTween.evaluate(animation),
+      borderRadius: borderRadiusTween.evaluate(animation),
+      child: Opacity(
+        opacity: opacityTween.evaluate(animation),
+        child: child,
+      ),
     );
   }
 }
@@ -73,8 +56,8 @@ class HeroPageRoute extends PageRouteBuilder {
     required this.tag,
     required this.child,
   }) : super(
-    transitionDuration: Duration(milliseconds: 1000),
-    reverseTransitionDuration: Duration(milliseconds: 1000),
+    transitionDuration: const Duration(milliseconds: 1000),
+    reverseTransitionDuration: const Duration(milliseconds: 1000),
     pageBuilder: (
       BuildContext context,
       Animation<double> animation,
@@ -85,7 +68,7 @@ class HeroPageRoute extends PageRouteBuilder {
         createRectTween: (Rect? begin, Rect? end) {
           return CurvedRectArcTween(begin: begin, end: end);
         },
-        child: PageRouteAnimation(
+        child: PageRouteTransition(
           child: child,
           animation: animation,
         ),
