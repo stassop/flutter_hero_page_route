@@ -24,7 +24,7 @@ class PageRouteTransition extends AnimatedWidget {
 
   final Widget child;
   final Animation<double> animation;
-  
+
   static final opacityTween = Tween<double>(begin: 0.0, end: 1.0);
   static final elevationTween = Tween<double>(begin: 6.0, end: 0.0);
   static final borderRadiusTween = BorderRadiusTween(
@@ -36,7 +36,7 @@ class PageRouteTransition extends AnimatedWidget {
   Widget build(BuildContext context) {
     final animation = listenable as Animation<double>;
     return Material(
-      color: Colors.blue, // must be the same color as FloatingActionButton
+      color: Colors.blue, // color must be the same as FloatingActionButton
       clipBehavior: Clip.antiAlias,
       elevation: elevationTween.evaluate(animation),
       borderRadius: borderRadiusTween.evaluate(animation),
