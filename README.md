@@ -101,6 +101,8 @@ Normally, `createRectTween` utilises [MaterialRectArcTween](https://api.flutter.
 
 In order to achieve that, we need to extend the tween class, override its `lerp` method, pass its clock value to the `transform` method of a [Curve](https://api.flutter.dev/flutter/animation/Curves-class.html) constant, and return the result.
 
+The `pageBuilder` callback receives the `animation` argument which can be used to control the route transition. Since most widgets have shape, background color and elevation, we can pass their initial values.
+
 Here's the code:
 
 ```dart
