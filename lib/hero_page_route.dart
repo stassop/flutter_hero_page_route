@@ -29,7 +29,7 @@ class HeroPageRoute extends PageRouteBuilder {
     this.initElevation,
     this.initShape,
     this.initBackgroundColor,
-    this.curve = Curves.easeInOut,
+    this.curve = Curves.ease,
   }) : super(
     transitionDuration: const Duration(milliseconds: 1000),
     reverseTransitionDuration: const Duration(milliseconds: 1000),
