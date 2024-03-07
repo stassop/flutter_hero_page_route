@@ -22,7 +22,7 @@ The `Hero` widget does most of the heavy lifting here by creating a smooth trans
 
 To switch routes, [Navigator.push()](https://docs.flutter.dev/cookbook/navigation/navigation-basics#2-navigate-to-the-second-route-using-navigatorpush) expects a descendant of the [Route](https://api.flutter.dev/flutter/widgets/Route-class.html) class, such as [MaterialPageRoute](https://api.flutter.dev/flutter/material/MaterialPageRoute-class.html). If you want a custom route transition, you can use [PageRouteBuilder](https://api.flutter.dev/flutter/widgets/PageRouteBuilder-class.html) class, as described in this [recipe](https://docs.flutter.dev/cookbook/animation/page-route-animation).
 
-To avoid wrapping each route in `PageRouteBuilder`, and extend it instead. We then call the superclass with `pageBuilder` and `transitionDuration` properties to gain control of the animation.
+To avoid wrapping each route in `PageRouteBuilder`, we extend it instead. We then call the superclass with `pageBuilder` and `transitionDuration` properties to gain control of the animation.
 
 Here's what the code looks like:
 
