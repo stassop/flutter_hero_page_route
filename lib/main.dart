@@ -27,12 +27,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final initElevation = 6.0;
-    final initShape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(16.0)),
-    );
-    final initBackgroundColor = Theme.of(context).colorScheme.primary;
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -48,15 +42,17 @@ class HomePage extends StatelessWidget {
             HeroPageRoute(
               tag: 'hero',
               child: const NextPage(),
-              initElevation: initElevation,
-              initShape: initShape,
-              initBackgroundColor: initBackgroundColor,
+              initElevation: 6.0,
+              initShape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(16.0)),
+              ),
+              initBackgroundColor: Theme.of(context).colorScheme.primary,
             ),
           );
         },
+        backgroundColor: Theme.of(context).colorScheme.primary,
         child: Text('Go!',
             style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
-        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
     );
   }
