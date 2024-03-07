@@ -24,6 +24,8 @@ To switch routes, [Navigator.push()](https://docs.flutter.dev/cookbook/navigatio
 
 To avoid wrapping each route in `PageRouteBuilder`, we extend it instead. We then call the superclass with `pageBuilder` and `transitionDuration` properties to gain control of the animation.
 
+The `pageBuilder` callback receives the `animation` argument which can be used to control the route transition. Since most widgets have shape, background color and elevation, we can pass their initial values.
+
 Here's what the code looks like:
 
 ```dart
@@ -100,8 +102,6 @@ If you paid attention, you might have noticed that the hero `createRectTween` pa
 Normally, `createRectTween` utilises [MaterialRectArcTween](https://api.flutter.dev/flutter/material/MaterialRectArcTween-class.html) or [MaterialRectCenterArcTween](https://api.flutter.dev/flutter/material/MaterialRectCenterArcTween-class.html). But we want to control the timing of the tween, all other things being equal.
 
 In order to achieve that, we need to extend the tween class, override its `lerp` method, pass its clock value to the `transform` method of a [Curve](https://api.flutter.dev/flutter/animation/Curves-class.html) constant, and return the result.
-
-The `pageBuilder` callback receives the `animation` argument which can be used to control the route transition. Since most widgets have shape, background color and elevation, we can pass their initial values.
 
 Here's the code:
 
