@@ -1,6 +1,15 @@
 # Flutter Hero Page Route (Updated)
 ### Create Hero-like Page Route Transitions in Flutter
 
+## Update
+This is an update of my previous article about page route transitions.
+
+There's a few reasons for the update:
+
+* My general knowledge of Flutter and Dart has improved
+* The new code is simpler and more versatile
+* The new version is using Material 3
+
 ## Hero Animations
 If you’re unfamiliar with the [Hero class](https://api.flutter.dev/flutter/widgets/Hero-class.html), have a look at this article about [Hero animations](https://docs.flutter.dev/ui/animations/hero-animations). `Hero` is a powerful Flutter class that allows your to move a widget seamlessly between routes.
 
