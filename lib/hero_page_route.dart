@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class CurveRectTween extends MaterialRectArcTween {
   CurveRectTween({
-    Rect? begin,
-    Rect? end,
+    super.begin,
+    super.end,
     required this.curve,
-  }) : super(begin: begin, end: end);
+  });
 
   final Curve curve;
 
@@ -22,6 +22,7 @@ class HeroPageRoute extends PageRouteBuilder {
   final ShapeBorder? initShape;
   final Color? initBackgroundColor;
   final Curve curve;
+  final Duration duration;
 
   HeroPageRoute({
     required this.tag,
@@ -30,9 +31,10 @@ class HeroPageRoute extends PageRouteBuilder {
     this.initShape,
     this.initBackgroundColor,
     this.curve = Curves.ease,
+    this.duration = const Duration(seconds: 1),
   }) : super(
-    transitionDuration: const Duration(milliseconds: 1000),
-    reverseTransitionDuration: const Duration(milliseconds: 1000),
+    transitionDuration: duration,
+    reverseTransitionDuration: duration,
     pageBuilder: (
       BuildContext context,
       Animation<double> animation,
