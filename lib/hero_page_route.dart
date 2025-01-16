@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class CurveRectTween extends MaterialRectArcTween {
-  CurveRectTween({
-    super.begin,
-    super.end,
+class CurvedRectTween extends MaterialRectArcTween {
+  CurvedRectTween({
+    required super.begin,
+    required super.end,
     required this.curve,
   });
 
@@ -16,22 +16,22 @@ class CurveRectTween extends MaterialRectArcTween {
 }
 
 class HeroPageRoute extends PageRouteBuilder {
+  final Color? color;
+  final Curve curve;
+  final double? elevation;
+  final Duration duration;
+  final ShapeBorder? shape;
   final String tag;
   final Widget child;
-  final double? initElevation;
-  final ShapeBorder? initShape;
-  final Color? initBackgroundColor;
-  final Curve curve;
-  final Duration duration;
 
   HeroPageRoute({
-    required this.tag,
     required this.child,
-    this.initElevation,
-    this.initShape,
-    this.initBackgroundColor,
-    this.curve = Curves.ease,
-    this.duration = const Duration(seconds: 1),
+    required this.tag,
+    this.color,
+    this.curve = Curves.easeInOut,
+    this.elevation,
+    this.shape,
+    this.duration = const Duration(milliseconds: 500),
   }) : super(
     transitionDuration: duration,
     reverseTransitionDuration: duration,
@@ -40,33 +40,35 @@ class HeroPageRoute extends PageRouteBuilder {
       Animation<double> animation,
       Animation<double> secondaryAnimation,
     ) {
-      final elevationTween = Tween<double>(begin: initElevation ?? 0.0, end: 0.0);
-      final opacityTween = Tween<double>(begin: 0.0, end: 1.0);
+      final elevationTween = Tween<double>(
+            begin: elevation ?? 0.0, 
+            end: 0.0,
+          ).chain(CurveTween(curve: curve));
+      final opacityTween = Tween<double>(
+            begin: 0.0, 
+            end: 1.0,
+          ).chain(CurveTween(curve: curve));
       final shapeTween = ShapeBorderTween(
-        begin: initShape ?? const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(0.0)),
-        ),
-        end: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(0.0)),
-        ),
-      );
-      final backgroundColorTween = ColorTween(
-        begin: initBackgroundColor ?? Colors.transparent,
-        end: Colors.transparent,
-      );
+            begin: shape ?? const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+            end: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+          ).chain(CurveTween(curve: curve));
+      final colorTween = ColorTween(
+            begin: color ?? Colors.transparent,
+            end: Colors.transparent,
+          );
 
       return Hero(
         tag: tag,
         createRectTween: (Rect? begin, Rect? end) {
-          return CurveRectTween(begin: begin, end: end, curve: curve);
+          return CurvedRectTween(begin: begin, end: end, curve: curve);
         },
         child: AnimatedBuilder(
           animation: animation,
           builder: (context, child) {
             return Material(
-              shape: shapeTween.evaluate(animation),
               elevation: elevationTween.evaluate(animation),
-              color: backgroundColorTween.evaluate(animation),
+              shape: shapeTween.evaluate(animation),
+              color: colorTween.evaluate(animation),
               clipBehavior: Clip.hardEdge,
               child: Opacity(
                 opacity: opacityTween.evaluate(animation),

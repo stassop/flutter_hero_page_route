@@ -1,51 +1,68 @@
-# Flutter Hero Page Route (Updated)
+# Flutter Hero Page Route
 ### Create Hero-like Page Route Transitions in Flutter
 
-## Update
-This is an update of my previous article about page route transitions.
+## Synopsis
 
-There's a few reasons for the update:
+If you're unfamiliar with the [Hero class](https://api.flutter.dev/flutter/widgets/Hero-class.html), have a look at this [article about Hero animations](https://docs.flutter.dev/ui/animations/hero-animations). Hero is a powerful Flutter class that enables seamless transitions of widgets between routes.
 
-* My general knowledge of Flutter and Dart has improved
-* The new code is simpler and more versatile
-* The new version is using Material 3
+In contrast to standard Hero animations, which transition a single widget between screens, we want to apply a Hero animation to the entire screen. This results in more dramatic and engaging transitions.
 
-## Hero Animations
-If you’re unfamiliar with the [Hero class](https://api.flutter.dev/flutter/widgets/Hero-class.html), have a look at this article about [Hero animations](https://docs.flutter.dev/ui/animations/hero-animations). `Hero` is a powerful Flutter class that allows your to move a widget seamlessly between routes.
-
-Another great thing about the `Hero` class is that it can be composed just like any other widget, making it possible to create cool route transition effects. For example, morph a `FloatingActionButton` into a new page.
+Another great thing about the Hero class is its composability. Like any other Flutter widget, it can be composed or extended, enabling cool route transitions that animate the entire screen content.
+In our example, we seamlessly morph the FloatingActionButton into a new screen:
 
 ![Flutter Hero Page Route](flutter_hero_page_route.gif)
 
-## How It Works
-The `Hero` widget does most of the heavy lifting here by creating a smooth transition between the the origin and destination widgets. But what if we want more control over the animation?
+## Hero Animations
 
-To switch routes, [Navigator.push()](https://docs.flutter.dev/cookbook/navigation/navigation-basics#2-navigate-to-the-second-route-using-navigatorpush) expects a descendant of the [Route](https://api.flutter.dev/flutter/widgets/Route-class.html) class, such as [MaterialPageRoute](https://api.flutter.dev/flutter/material/MaterialPageRoute-class.html). To create a custom route transition, you can use [PageRouteBuilder](https://api.flutter.dev/flutter/widgets/PageRouteBuilder-class.html) class, as described in this [recipe](https://docs.flutter.dev/cookbook/animation/page-route-animation).
+The [Hero class](https://api.flutter.dev/flutter/widgets/Hero-class.html) does most of the heavy lifting here by creating a smooth transition between the origin and destination widgets. But what if we want more control over the animation?
 
-To avoid wrapping each route in `PageRouteBuilder`, we extend it instead. We then call the superclass with `pageBuilder` and `transitionDuration` properties to gain control of the animation.
+To switch routes, [Navigator.push()](https://docs.flutter.dev/cookbook/navigation/navigation-basics#2-navigate-to-the-second-route-using-navigator-push) expects a descendant of the [Route class](https://api.flutter.dev/flutter/widgets/Route-class.html), such as [MaterialPageRoute](https://api.flutter.dev/flutter/material/MaterialPageRoute-class.html). To create a custom route transition, we can use [PageRouteBuilder](https://api.flutter.dev/flutter/widgets/PageRouteBuilder-class.html) class, as described in this [recipe](https://docs.flutter.dev/cookbook/animation/page-route-animation).
 
-The `pageBuilder` callback receives the `animation` argument which can be used to control the route transition. Since most widgets have shape, background color and elevation, we can pass their initial values.
+To avoid wrapping each route in `PageRouteBuilder`, we extend it instead. We then call the superclass, and use its `pageBuilder` property to gain full control of the route transition animation.
 
-Here's what the code looks like:
+The `pageBuilder` callback receives an `animation` argument that we can use to control the route transition. This allows us to animate other properties like shape, color, and elevation.
+
+In order to apply a custom animation Curve, we extend the default MaterialRectArcTween class, responsible for Hero’s flight path, and pass it to the `createRectTween` property.
+
+Finally, we wrap the Hero’s child in a `Material` widget. This enables us to transition between the initial and final shape, color, and elevation. We then `AnimatedBuilder` to run the animation.
+
+Here’s what the code looks like:
 
 ```dart
+import 'package:flutter/material.dart';
+
+class CurvedRectTween extends MaterialRectArcTween {
+  CurvedRectTween({
+    required super.begin,
+    required super.end,
+    required this.curve,
+  });
+
+  final Curve curve;
+
+  @override
+  Rect lerp(double t) {
+    return super.lerp(curve.transform(t));
+  }
+}
+
 class HeroPageRoute extends PageRouteBuilder {
+  final Color? color;
+  final Curve curve;
+  final double? elevation;
+  final Duration duration;
+  final ShapeBorder? shape;
   final String tag;
   final Widget child;
-  final double? initElevation;
-  final ShapeBorder? initShape;
-  final Color? initBackgroundColor;
-  final Curve curve;
-  final Duration duration;
 
   HeroPageRoute({
-    required this.tag,
     required this.child,
-    this.initElevation,
-    this.initShape,
-    this.initBackgroundColor,
-    this.curve = Curves.ease,
-    this.duration = const Duration(seconds: 1),
+    required this.tag,
+    this.color,
+    this.curve = Curves.easeInOut,
+    this.elevation,
+    this.shape,
+    this.duration = const Duration(milliseconds: 500),
   }) : super(
     transitionDuration: duration,
     reverseTransitionDuration: duration,
@@ -54,33 +71,35 @@ class HeroPageRoute extends PageRouteBuilder {
       Animation<double> animation,
       Animation<double> secondaryAnimation,
     ) {
-      final elevationTween = Tween<double>(begin: initElevation ?? 0.0, end: 0.0);
-      final opacityTween = Tween<double>(begin: 0.0, end: 1.0);
+      final elevationTween = Tween<double>(
+            begin: elevation ?? 0.0, 
+            end: 0.0,
+          ).chain(CurveTween(curve: curve));
+      final opacityTween = Tween<double>(
+            begin: 0.0, 
+            end: 1.0,
+          ).chain(CurveTween(curve: curve));
       final shapeTween = ShapeBorderTween(
-        begin: initShape ?? const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(0.0)),
-        ),
-        end: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(0.0)),
-        ),
-      );
-      final backgroundColorTween = ColorTween(
-        begin: initBackgroundColor ?? Colors.transparent,
-        end: Colors.transparent,
-      );
+            begin: shape ?? const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+            end: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+          ).chain(CurveTween(curve: curve));
+      final colorTween = ColorTween(
+            begin: color ?? Colors.transparent,
+            end: Colors.transparent,
+          );
 
       return Hero(
         tag: tag,
         createRectTween: (Rect? begin, Rect? end) {
-          return CurveRectTween(begin: begin, end: end, curve: curve);
+          return CurvedRectTween(begin: begin, end: end, curve: curve);
         },
         child: AnimatedBuilder(
           animation: animation,
           builder: (context, child) {
             return Material(
-              shape: shapeTween.evaluate(animation),
               elevation: elevationTween.evaluate(animation),
-              color: backgroundColorTween.evaluate(animation),
+              shape: shapeTween.evaluate(animation),
+              color: colorTween.evaluate(animation),
               clipBehavior: Clip.hardEdge,
               child: Opacity(
                 opacity: opacityTween.evaluate(animation),
@@ -96,31 +115,94 @@ class HeroPageRoute extends PageRouteBuilder {
 }
 ```
 
-## One Last Thing
-If you paid attention, you might have noticed that the hero `createRectTween` parameter is passed a custom class. This parameter allows for using [RectTween](https://api.flutter.dev/flutter/animation/RectTween-class.html) to customize the hero transition path.
+## Putting It All Together
 
-Normally, `createRectTween` utilises [MaterialRectArcTween](https://api.flutter.dev/flutter/material/MaterialRectArcTween-class.html) or [MaterialRectCenterArcTween](https://api.flutter.dev/flutter/material/MaterialRectCenterArcTween-class.html). But we want to control the timing of the tween, all other things being equal.
+In our example, we want the second route’s content appear to originate from the [FloatingActionButton](https://api.flutter.dev/flutter/material/FloatingActionButton-class.html), so we use the button’s default properties as the starting point of our animation.
 
-In order to achieve that, we need to extend the tween class, override its `lerp` method, pass its clock value to the `transform` method of a [Curve](https://api.flutter.dev/flutter/animation/Curves-class.html) constant, and return the result.
+Unfortunately, some default properties might not be defined in the default theme (e.g. `Theme.of(context).floatingActionButtonTheme.shape`), so we use the null-coalescing (`??`) operator to provide backup values.
 
-Here's the code:
+Since our HeroPageRoute is essentially a subclass of [Route](https://api.flutter.dev/flutter/widgets/Route-class.html), we can use the Navigator.of(context).push method to add it to the route stack. However, it still requires a tag for the Hero to use.
+
+Finally, we can apply custom duration and curve. These are optional since Hero defaults to `Curves.fastOutSlowIn` and `PageRouteBuilder` uses a 300-millisecond transition by default.
 
 ```dart
-class CurveRectTween extends MaterialRectArcTween {
-  CurveRectTween({
-    super.begin,
-    super.end,
-    required this.curve,
-  });
+import 'package:flutter/material.dart';
+import 'package:flutter_hero_page_route/hero_page_route.dart';
 
-  final Curve curve;
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
-  Rect lerp(double t) {
-    return super.lerp(curve.transform(t));
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Hero Page Route',
+      theme: ThemeData(
+        useMaterial3: true,
+        primarySwatch: Colors.deepPurple,
+      ),
+      home: const HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Home Page'),
+      ),
+      body: const Center(
+        child: Text('Home page'),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'my_hero_route',
+        onPressed: () {
+          Navigator.of(context).push(
+            HeroPageRoute(
+              tag: 'my_hero_route',
+              child: const NextPage(),
+              curve: Curves.easeInOutSine,
+              duration: const Duration(milliseconds: 1000),
+              elevation: Theme.of(context).floatingActionButtonTheme.elevation ?? 6.0,
+              shape: Theme.of(context).floatingActionButtonTheme.shape ??
+                  const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                  ),
+              color: Theme.of(context).floatingActionButtonTheme.backgroundColor ??
+                      Theme.of(context).colorScheme.primaryContainer,
+            ),
+          );
+        },
+        label: const Text('Next Page'),
+      ),
+    );
+  }
+}
+
+class NextPage extends StatelessWidget {
+  const NextPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Next Page'),
+      ),
+      body: const Center(
+        child: Text('Next page'),
+      ),
+    );
   }
 }
 ```
 
 ## Conclusion
-While Flutter generally favors composition over inheritance, understanding a class's inner workings and extending it can be valuable for achieving more refined behaviour and granular control.
+
+While Flutter generally favours [composition over inheritance](https://docs.flutter.dev/resources/inside-flutter#aggressive-composability), extending its classes can significantly enhance customization, leading to dramatic effects and highly personalized user interfaces.
