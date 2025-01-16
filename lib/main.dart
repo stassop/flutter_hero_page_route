@@ -40,8 +40,8 @@ class HomePage extends StatelessWidget {
             HeroPageRoute(
               tag: 'my_hero_route',
               child: const NextPage(),
-              curve: Curves.easeInOutSine,
-              duration: const Duration(milliseconds: 1000),
+              curve: Curves.linear,
+              duration: const Duration(milliseconds: 5000),
               elevation: Theme.of(context).floatingActionButtonTheme.elevation ?? 6.0,
               shape: Theme.of(context).floatingActionButtonTheme.shape ??
                   const RoundedRectangleBorder(

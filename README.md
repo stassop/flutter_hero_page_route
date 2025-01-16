@@ -8,6 +8,7 @@ If you're unfamiliar with the [Hero class](https://api.flutter.dev/flutter/widge
 In contrast to standard Hero animations, which transition a single widget between screens, we want to apply a Hero animation to the entire screen. This results in more dramatic and engaging transitions.
 
 Another great thing about the Hero class is its composability. Like any other Flutter widget, it can be composed or extended, enabling cool route transitions that animate the entire screen content.
+
 In our example, we seamlessly morph the FloatingActionButton into a new screen:
 
 ![Flutter Hero Page Route](flutter_hero_page_route.gif)
